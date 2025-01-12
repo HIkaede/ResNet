@@ -57,7 +57,7 @@ def main(data_root, classes, epochs=20, lr=0.001):
                 transforms.RandomCrop(112),
                 transforms.RandomHorizontalFlip(),
                 transforms.RandomRotation(10),
-                transforms.Lambda(lambda img: img.convert("RGB")),  # 转换为RGB
+                transforms.Lambda(lambda img: img.convert("RGB")),
                 transforms.ToTensor(),
                 transforms.Normalize([0.251, 0.234, 0.221], [0.270, 0.254, 0.242]),
             ]
@@ -65,7 +65,7 @@ def main(data_root, classes, epochs=20, lr=0.001):
         "val": transforms.Compose(
             [
                 transforms.CenterCrop(112),
-                transforms.Lambda(lambda img: img.convert("RGB")),  # 转换为RGB
+                transforms.Lambda(lambda img: img.convert("RGB")),
                 transforms.ToTensor(),
                 transforms.Normalize([0.251, 0.234, 0.221], [0.270, 0.254, 0.242]),
             ]
