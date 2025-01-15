@@ -9,6 +9,7 @@ from PIL import Image
 def main(image_path, model_path):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+    # 数据预处理
     data_transforms = transforms.Compose(
         [
             transforms.Resize(128),
@@ -19,6 +20,7 @@ def main(image_path, model_path):
         ]
     )
 
+    # 初始化ResNet50模型并加载预训练权重
     model = ResNet50(num_classes=1000).to(device)
     model.load_state_dict(
         torch.load(model_path, map_location=device, weights_only=True)
@@ -26,7 +28,7 @@ def main(image_path, model_path):
     model.eval()
 
     try:
-        pil_img = Image.open(image_path).convert("RGB")
+        pil_img = Image.open(image_path).convert("RGBA")
     except IOError:
         print(f"无法读取图像: {image_path}")
         return
@@ -47,5 +49,5 @@ def main(image_path, model_path):
 if __name__ == "__main__":
     script_dir = os.path.dirname(os.path.abspath(__file__))
     default_model_path = os.path.join(script_dir, "resnet50_pokemon.pth")
-    image_path = "/home/yi/resnet/image.png"
+    image_path = "/home/yi/Downloads/pkq.png"
     main(image_path=image_path, model_path=default_model_path)

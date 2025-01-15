@@ -8,6 +8,7 @@ import os
 import time
 
 
+# 测量函数执行时间
 def timer(func):
     def wrapper(*args, **kwargs):
         start = time.time()
@@ -51,6 +52,7 @@ def validate(model, dataloader, criterion, device):
 def main(data_root, classes, epochs=20, lr=0.001):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+    # 数据增强和预处理
     data_transforms = {
         "train": transforms.Compose(
             [
@@ -90,15 +92,13 @@ def main(data_root, classes, epochs=20, lr=0.001):
     for epoch in range(epochs):
         train_loss = train_one_epoch(model, train_loader, optimizer, criterion, device)
         val_loss, val_acc = validate(model, val_loader, criterion, device)
-        print(
-            f"Epoch [{epoch+1}/{epochs}], "
-            f"Train Loss: {train_loss:.4f}, "
-            f"Val Loss: {val_loss:.4f}, "
-            f"Val Acc: {val_acc:.4f}"
-        )
-
+        print(f"Epoch [{epoch+1}/{epochs}]")
+        # 记录训练结果到CSV文件
+        with open("train.csv", "a") as f:
+            f.write(f"{epoch+1},{train_loss},{val_loss},{val_acc}\n")
     script_dir = os.path.dirname(os.path.abspath(__file__))
     save_path = os.path.join(script_dir, "resnet50_pokemon.pth")
+    # 保存模型权重
     torch.save(model.state_dict(), save_path)
 
 
@@ -106,6 +106,6 @@ if __name__ == "__main__":
     main(
         data_root="/home/yi/resnet/pokemon-dataset-1000",
         classes=1000,
-        epochs=100,
+        epochs=60,
         lr=0.001,
     )
